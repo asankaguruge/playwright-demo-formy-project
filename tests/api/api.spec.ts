@@ -11,5 +11,7 @@ test.describe("Example API Requests", () => {
     test('verifyDetailsOfAllPeople', async ({ request }) => {
         const response = await request.get(baseURL + "api/people");
         expect(response.status()).toBe(200);
+        const responseBody = await response.json();
+        console.log(responseBody);
     });
 });

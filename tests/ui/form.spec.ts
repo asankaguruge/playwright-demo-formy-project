@@ -1,10 +1,12 @@
 import { test, expect } from '@playwright/test';
 
 test.describe("Form Page", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('https://formy-project.herokuapp.com/form');
+  })
   //This test is to verify the availability of elements in the form. 
   //I have commented out some of the locator methods specific to playwright and replaced them with traditional methods such as XPath.
-  test('verify the availability of form elements', async ({ page }) => {
-    await page.goto('https://formy-project.herokuapp.com/form');
+  test('verify the availability of form elements', async ({ page }) => {    
     //await expect(page.getByRole('link', { name: 'Formy' })).toBeVisible;
     await expect(page.locator(".//*[@id='logo'][text()='Formy']")).toBeVisible;
     //await expect(page.getByRole('link', { name: 'Form', exact: true })).toBeVisible;
@@ -28,8 +30,7 @@ test.describe("Form Page", () => {
     await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible;
   });
 
-  test('verify form is successfully submitted', async ({ page }) => {
-    await page.goto('https://formy-project.herokuapp.com/form');  
+  test('verify form is successfully submitted', async ({ page }) => {    
     await page.getByRole('textbox', { name: 'First name' }).click();
     await page.getByRole('textbox', { name: 'First name' }).fill('Asanka');  
     await page.getByRole('textbox', { name: 'Last name' }).click();

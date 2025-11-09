@@ -11,7 +11,8 @@ test.describe("Form Page", () => {
     await expect(page.locator(".//*[@id='logo'][text()='Formy']")).toBeVisible;
     //await expect(page.getByRole('link', { name: 'Form', exact: true })).toBeVisible;
     await expect(page.locator(".//*[@class='nav-link'][text()='Form']")).toBeVisible;
-    await expect(page.getByRole('link', { name: 'Components' })).toBeVisible;
+    //await expect(page.getByRole('link', { name: 'Components' })).toBeVisible;
+    await expect(page.locator(".//*[@id='navbarDropdownMenuLink'][contains(text(), 'Components')]")).toBeVisible;
     await expect(page.getByRole('heading', { name: 'Complete Web Form' })).toBeVisible;
     await expect(page.getByText('First name')).toBeVisible;
     await expect(page.getByRole('textbox', { name: 'First name' })).toBeVisible;  

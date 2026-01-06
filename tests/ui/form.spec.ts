@@ -1,4 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { readCsv } from '../../utils/readCsv';
+//import path from 'path';
+
+const testData = readCsv('testdata/test_data_sheet.csv');
+//const testDataPath = path.resolve(__dirname, '../../testdata/test_data_sheet.csv');
+//const testData = readCsv(testDataPath);
 
 test.describe("Form Page", () => {
   test.beforeEach(async ({ page }) => {
@@ -51,34 +57,38 @@ test.describe("Form Page", () => {
     await expect(page.locator(".//*[@role='button'][text()='Submit']")).toBeVisible;
   });
 
-  test('verify form is successfully submitted', async ({ page }) => {    
-    //await page.getByRole('textbox', { name: 'First name' }).click();    
-    //await page.getByRole('textbox', { name: 'First name' }).fill('Asanka');  
-    await page.locator("//*[@id='first-name']").click();  
-    await page.locator("//*[@id='first-name']").fill('Asanka');  
-    //await page.getByRole('textbox', { name: 'Last name' }).click();
-    //await page.getByRole('textbox', { name: 'Last name' }).fill('Guruge');  
-    await page.locator("//*[@id='last-name']").click();
-    await page.locator("//*[@id='last-name']").fill('Guruge');
-    //await page.getByRole('textbox', { name: 'Job title' }).click();
-    //await page.getByRole('textbox', { name: 'Job title' }).fill('Software Engineer');  
-    await page.locator("//*[@id='job-title']").click();
-    await page.locator("//*[@id='job-title']").fill('Software Engineer');  
-    //await page.locator('#radio-button-3').check();  
-    await page.locator("//*[@id='radio-button-3']").check();  
-    //await page.locator('#checkbox-1').check();  
-    await page.locator("//*[@id='checkbox-1']").check();  
-    //await page.getByLabel('Years of experience:').selectOption('4');  
-    await page.locator("//*[@id='select-menu']").selectOption('10+');
-    //await page.getByRole('textbox', { name: 'mm/dd/yyyy' }).click();
-    //await page.getByRole('cell', { name: '26' }).click();  
-    await page.locator("//*[@id='datepicker']").click();
-    await page.locator("//*[@id='datepicker']").fill('12/09/2025');  
-    //await page.getByRole('button', { name: 'Submit' }).click();
-    await page.locator("//*[@role='button'][text()='Submit']").click();
-    //await expect(page.getByRole('heading')).toContainText('Thanks for submitting your form');  
-    await expect(page.locator("//*[@class='container']/*[text()='Thanks for submitting your form']")).toContainText('Thanks for submitting your form');  
-    //await expect(page.getByRole('alert')).toContainText('The form was successfully submitted!');
-    await expect(page.locator("//*[contains(@class, 'alert') ][contains(text(),'The form was successfully submitted!')]")).toContainText('The form was successfully submitted!');
-  });
+  for (const row of testData) {
+    if (row.TestName === 'positiveTest') {
+      test('verify form is successfully submitted', async ({ page }) => {    
+        //await page.getByRole('textbox', { name: 'First name' }).click();    
+        //await page.getByRole('textbox', { name: 'First name' }).fill('Asanka');  
+        await page.locator("//*[@id='first-name']").click();  
+        await page.locator("//*[@id='first-name']").fill(row.FirstName);  
+        //await page.getByRole('textbox', { name: 'Last name' }).click();
+        //await page.getByRole('textbox', { name: 'Last name' }).fill('Guruge');  
+        await page.locator("//*[@id='last-name']").click();
+        await page.locator("//*[@id='last-name']").fill(row.LastName);
+        //await page.getByRole('textbox', { name: 'Job title' }).click();
+        //await page.getByRole('textbox', { name: 'Job title' }).fill('Software Engineer');  
+        await page.locator("//*[@id='job-title']").click();
+        await page.locator("//*[@id='job-title']").fill(row.JobTitle);  
+        //await page.locator('#radio-button-3').check();  
+        await page.locator("//*[@id='" + row.LevelOfEducation + "']").check();  
+        //await page.locator('#checkbox-1').check();  
+        await page.locator("//*[@id='" + row.Gender + "']").check();  
+        //await page.getByLabel('Years of experience:').selectOption('4');  
+        await page.locator("//*[@id='select-menu']").selectOption(row.Experience);
+        //await page.getByRole('textbox', { name: 'mm/dd/yyyy' }).click();
+        //await page.getByRole('cell', { name: '26' }).click();  
+        await page.locator("//*[@id='datepicker']").click();
+        await page.locator("//*[@id='datepicker']").fill(row.DateEntered);  
+        //await page.getByRole('button', { name: 'Submit' }).click();
+        await page.locator("//*[@role='button'][text()='Submit']").click();
+        //await expect(page.getByRole('heading')).toContainText('Thanks for submitting your form');  
+        await expect(page.locator("//*[@class='container']/*[text()='Thanks for submitting your form']")).toContainText('Thanks for submitting your form');  
+        //await expect(page.getByRole('alert')).toContainText('The form was successfully submitted!');
+        await expect(page.locator("//*[contains(@class, 'alert') ][contains(text(),'The form was successfully submitted!')]")).toContainText(row.ExpectedResult);
+      });
+    }
+  }
 });
